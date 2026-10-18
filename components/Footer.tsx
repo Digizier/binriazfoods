@@ -62,6 +62,7 @@ export default function Footer() {
                 src="/logo.png"
                 alt="Bin Riaz Foods Logo"
                 className="h-16 w-auto object-contain brightness-110"
+                style={{ maxHeight: '64px', width: 'auto' }}
               />
             </Link>
             <p className="text-xs text-white/80 leading-relaxed">

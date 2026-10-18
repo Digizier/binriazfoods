@@ -113,6 +113,7 @@ export default function Header() {
               src="/logo.png"
               alt="Bin Riaz Foods Logo"
               className="h-12 sm:h-16 w-auto object-contain"
+              style={{ maxHeight: '56px', width: 'auto' }}
             />
           </Link>
 

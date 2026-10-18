@@ -52,11 +52,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full antialiased scroll-smooth">
+    <html lang="en" className="h-full antialiased scroll-smooth" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.png" />
       </head>
-      <body className="min-h-full flex flex-col bg-[#FAF6EC] text-[#202820]">
+      <body className="min-h-full flex flex-col bg-[#FAF6EC] text-[#202820]" suppressHydrationWarning>
         <CartProvider>
           <ScrollToTop />
           <Header />

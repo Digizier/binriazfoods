@@ -362,6 +362,7 @@ export default function AdminDashboardPage() {
               src="/logo.png"
               alt="Bin Riaz Foods"
               className="h-16 w-auto mx-auto object-contain"
+              style={{ maxHeight: '64px', width: 'auto' }}
             />
             <h1 className="text-xl font-black text-[#0B3826]">
               Admin Control Portal
@@ -428,7 +429,7 @@ export default function AdminDashboardPage() {
         <div>
           {/* Logo & Portal Branding */}
           <div className="p-5 border-b border-white/10 flex items-center space-x-3">
-            <img src="/logo.png" alt="Logo" className="h-10 w-auto brightness-110" />
+            <img src="/logo.png" alt="Logo" className="h-10 w-auto brightness-110" style={{ maxHeight: '40px', width: 'auto' }} />
             <div>
               <h2 className="font-black text-sm text-[#D4AF55] leading-tight">BIN RIAZ FOODS</h2>
               <span className="text-[10px] text-white/60 uppercase tracking-widest font-bold">Admin Hub</span>
