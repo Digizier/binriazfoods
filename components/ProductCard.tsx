@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Product } from '../lib/types';
 import { useCart } from '../lib/cart-context';
+import { calculatePriceForWeight } from '../lib/price-calculator';
 import { Heart, ShoppingBag, Star, Check } from 'lucide-react';
 
 interface ProductCardProps {
@@ -12,20 +13,34 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart, wishlist, toggleWishlist } = useCart();
-  const [selectedWeight, setSelectedWeight] = useState(
+  const defaultWeight =
     product.weight_options && product.weight_options.length > 0
       ? product.weight_options[0]
-      : 'Standard'
-  );
+      : 'Standard';
+  const [selectedWeight, setSelectedWeight] = useState(defaultWeight);
   const [isAdded, setIsAdded] = useState(false);
   const [isImgLoaded, setIsImgLoaded] = useState(false);
 
   const isLiked = wishlist.includes(product.id);
 
+  // Dynamic price calculated instantly for selected weight
+  const currentPrice = calculatePriceForWeight(product.price, defaultWeight, selectedWeight);
+  const currentComparePrice = product.compare_price
+    ? calculatePriceForWeight(product.compare_price, defaultWeight, selectedWeight)
+    : null;
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    addToCart(product, selectedWeight, 1);
+    addToCart(
+      {
+        ...product,
+        price: currentPrice,
+        compare_price: currentComparePrice,
+      },
+      selectedWeight,
+      1
+    );
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 1500);
   };
@@ -37,9 +52,9 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   const discountPercent =
-    product.compare_price && product.compare_price > product.price
+    currentComparePrice && currentComparePrice > currentPrice
       ? Math.round(
-          ((product.compare_price - product.price) / product.compare_price) * 100
+          ((currentComparePrice - currentPrice) / currentComparePrice) * 100
         )
       : null;
 
@@ -135,12 +150,12 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Pricing and Cart Button */}
         <div className="mt-4 pt-3 border-t border-[#E5E1D6]/60 flex items-center justify-between">
           <div>
-            <div className="text-base sm:text-lg font-black text-[#0B3826]">
-              Rs. {Number(product.price).toLocaleString()}
+            <div className="text-base sm:text-lg font-black text-[#0B3826] transition-all">
+              Rs. {Number(currentPrice).toLocaleString()}
             </div>
-            {product.compare_price && product.compare_price > product.price ? (
+            {currentComparePrice && currentComparePrice > currentPrice ? (
               <span className="text-xs text-gray-400 line-through">
-                Rs. {Number(product.compare_price).toLocaleString()}
+                Rs. {Number(currentComparePrice).toLocaleString()}
               </span>
             ) : null}
           </div>

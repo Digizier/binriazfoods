@@ -23,6 +23,10 @@ interface CartContextType {
   wishlist: string[];
   toggleWishlist: (productId: string) => void;
   isInWishlist: (productId: string) => boolean;
+  isWishlistOpen: boolean;
+  openWishlist: () => void;
+  closeWishlist: () => void;
+  toggleWishlistDrawer: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -30,6 +34,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [isHydrated, setIsHydrated] = useState(false);
@@ -173,6 +178,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setAppliedCoupon(null);
   };
 
+  const openWishlist = () => setIsWishlistOpen(true);
+  const closeWishlist = () => setIsWishlistOpen(false);
+  const toggleWishlistDrawer = () => setIsWishlistOpen((prev) => !prev);
+
   const toggleWishlist = (productId: string) => {
     setWishlist((prev) =>
       prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId]
@@ -202,6 +211,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         wishlist,
         toggleWishlist,
         isInWishlist,
+        isWishlistOpen,
+        openWishlist,
+        closeWishlist,
+        toggleWishlistDrawer,
       }}
     >
       {children}

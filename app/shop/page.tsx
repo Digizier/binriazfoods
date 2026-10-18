@@ -4,6 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { supabase } from '../../lib/supabase';
 import { Product, Category } from '../../lib/types';
+import { useCart } from '../../lib/cart-context';
 import ProductCard from '../../components/ProductCard';
 import { ProductCardSkeleton } from '../../components/ShimmerSkeleton';
 import {
@@ -21,9 +22,11 @@ const PRODUCTS_PER_PAGE = 8;
 function ShopCatalogContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { wishlist } = useCart();
 
   const categoryParam = searchParams.get('category') || '';
   const searchParam = searchParams.get('q') || '';
+  const isWishlistParam = searchParams.get('wishlist') === 'true';
   const pageParam = parseInt(searchParams.get('page') || '1', 10);
 
   const [products, setProducts] = useState<Product[]>([]);
@@ -96,6 +99,14 @@ function ShopCatalogContent() {
           if (foundSub) {
             query = query.eq('subcategory_id', foundSub.id);
           }
+        }
+
+        // Filter by saved wishlist items
+        if (isWishlistParam) {
+          query = query.in(
+            'id',
+            wishlist.length > 0 ? wishlist : ['00000000-0000-0000-0000-000000000000']
+          );
         }
 
         // Search text

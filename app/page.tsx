@@ -30,7 +30,7 @@ export default function HomePage() {
         // 1. Fetch categories
         const { data: cats } = await supabase
           .from('categories')
-          .select('id, name, slug, parent_id, sort_order, is_active')
+          .select('id, name, slug, image_url, parent_id, sort_order, is_active')
           .is('parent_id', null)
           .eq('is_active', true)
           .order('sort_order', { ascending: true })
@@ -176,24 +176,49 @@ export default function HomePage() {
           </div>
         ) : (
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4 sm:gap-6">
-            {categories.map((cat) => (
-              <Link
-                key={cat.id}
-                href={`/shop?category=${cat.slug}`}
-                className="group flex flex-col items-center text-center space-y-2 p-2 rounded-2xl transition-all hover:bg-white hover:shadow-md border border-transparent hover:border-[#E5E1D6]"
-              >
-                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#FAF6EC] border-2 border-[#E5E1D6] group-hover:border-[#D4AF55] group-hover:scale-105 transition-all flex items-center justify-center overflow-hidden shadow-xs relative">
-                  <img
-                    src={cat.image_url || '/hero-banner.png'}
-                    alt={cat.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  />
-                </div>
-                <span className="text-xs font-bold text-[#0B3826] group-hover:text-[#D4AF55] transition-colors line-clamp-2">
-                  {cat.name}
-                </span>
-              </Link>
-            ))}
+            {categories.map((cat) => {
+              const fallbackImg =
+                cat.slug.includes('spice') || cat.slug.includes('masala')
+                  ? '/categories/spices-masalas.jpg'
+                  : cat.slug.includes('dry') || cat.slug.includes('nut')
+                  ? '/categories/dry-fruits-nuts.jpg'
+                  : cat.slug.includes('date')
+                  ? '/categories/dates.jpg'
+                  : cat.slug.includes('honey')
+                  ? '/categories/honey-natural-foods.jpg'
+                  : cat.slug.includes('ghee') || cat.slug.includes('oil') || cat.slug.includes('butter')
+                  ? '/categories/desi-ghee-edible-oils.jpg'
+                  : cat.slug.includes('pulse') || cat.slug.includes('grain') || cat.slug.includes('rice') || cat.slug.includes('lentil')
+                  ? '/categories/pulses-grains.jpg'
+                  : cat.slug.includes('hamper') || cat.slug.includes('gift')
+                  ? '/categories/luxury-gift-hampers.jpg'
+                  : cat.slug.includes('choc') || cat.slug.includes('sweet') || cat.slug.includes('tea')
+                  ? '/categories/chocolates-confectionery.jpg'
+                  : cat.slug.includes('pickle') || cat.slug.includes('achar')
+                  ? '/categories/pickles-condiments.jpg'
+                  : cat.slug.includes('combo')
+                  ? '/categories/combos-super-savers.jpg'
+                  : '/categories/spices-masalas.jpg';
+
+              return (
+                <Link
+                  key={cat.id}
+                  href={`/shop?category=${cat.slug}`}
+                  className="group flex flex-col items-center text-center space-y-2 p-2 rounded-2xl transition-all hover:bg-white hover:shadow-md border border-transparent hover:border-[#E5E1D6]"
+                >
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#FAF6EC] border-2 border-[#E5E1D6] group-hover:border-[#D4AF55] group-hover:scale-105 transition-all flex items-center justify-center overflow-hidden shadow-xs relative">
+                    <img
+                      src={cat.image_url || fallbackImg}
+                      alt={cat.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                  </div>
+                  <span className="text-xs font-bold text-[#0B3826] group-hover:text-[#D4AF55] transition-colors line-clamp-2">
+                    {cat.name}
+                  </span>
+                </Link>
+              );
+            })}
           </div>
         )}
       </section>

@@ -14,55 +14,59 @@ export default function Footer() {
   }
 
   return (
-    <footer className="bg-[#06291B] text-[#FAF6EC] pt-14 pb-24 lg:pb-14 border-t-2 border-[#D4AF55]">
+    <footer className="bg-[#06291B] text-[#FAF6EC] pt-12 pb-28 lg:pb-14 border-t-2 border-[#D4AF55]">
       {/* Trust Badges */}
-      <div className="max-w-7xl mx-auto px-4 pb-12 border-b border-white/10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div className="max-w-7xl mx-auto px-4 pb-10 border-b border-white/10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center">
           <div className="flex flex-col items-center space-y-2">
             <div className="w-12 h-12 rounded-full bg-[#0B3826] border border-[#D4AF55]/40 flex items-center justify-center text-[#D4AF55]">
               <Award className="w-6 h-6" />
             </div>
-            <h4 className="font-bold text-sm text-[#D4AF55]">100% Authentic Quality</h4>
-            <p className="text-xs text-white/70">Pure natural taste, strictly no adulteration</p>
+            <h4 className="font-bold text-xs sm:text-sm text-[#D4AF55]">100% Authentic Quality</h4>
+            <p className="text-[11px] sm:text-xs text-white/70">Pure natural taste, strictly no adulteration</p>
           </div>
 
           <div className="flex flex-col items-center space-y-2">
             <div className="w-12 h-12 rounded-full bg-[#0B3826] border border-[#D4AF55]/40 flex items-center justify-center text-[#D4AF55]">
               <Truck className="w-6 h-6" />
             </div>
-            <h4 className="font-bold text-sm text-[#D4AF55]">Nationwide Delivery</h4>
-            <p className="text-xs text-white/70">Safe courier dispatch across all cities of Pakistan</p>
+            <h4 className="font-bold text-xs sm:text-sm text-[#D4AF55]">Nationwide Delivery</h4>
+            <p className="text-[11px] sm:text-xs text-white/70">Safe courier dispatch across all cities of Pakistan</p>
           </div>
 
           <div className="flex flex-col items-center space-y-2">
             <div className="w-12 h-12 rounded-full bg-[#0B3826] border border-[#D4AF55]/40 flex items-center justify-center text-[#D4AF55]">
               <ShieldCheck className="w-6 h-6" />
             </div>
-            <h4 className="font-bold text-sm text-[#D4AF55]">Hygienic Packaging</h4>
-            <p className="text-xs text-white/70">Airtight, food-grade materials preserving freshness</p>
+            <h4 className="font-bold text-xs sm:text-sm text-[#D4AF55]">Hygienic Packaging</h4>
+            <p className="text-[11px] sm:text-xs text-white/70">Airtight, food-grade materials preserving freshness</p>
           </div>
 
           <div className="flex flex-col items-center space-y-2">
             <div className="w-12 h-12 rounded-full bg-[#0B3826] border border-[#D4AF55]/40 flex items-center justify-center text-[#D4AF55]">
               <RefreshCw className="w-6 h-6" />
             </div>
-            <h4 className="font-bold text-sm text-[#D4AF55]">Customer Priority</h4>
-            <p className="text-xs text-white/70">Friendly WhatsApp support & easy order tracking</p>
+            <h4 className="font-bold text-xs sm:text-sm text-[#D4AF55]">Customer Priority</h4>
+            <p className="text-[11px] sm:text-xs text-white/70">Friendly WhatsApp support & easy order tracking</p>
           </div>
         </div>
       </div>
 
       {/* Main Links Area */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-4 py-10 sm:py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand Info */}
           <div className="space-y-4">
             <Link href="/" className="inline-block">
               <img
                 src="/logo.png"
                 alt="Bin Riaz Foods Logo"
-                className="h-16 w-auto object-contain brightness-110"
-                style={{ maxHeight: '64px', width: 'auto' }}
+                className="h-16 w-auto object-contain"
+                style={{
+                  maxHeight: '64px',
+                  width: 'auto',
+                  filter: 'drop-shadow(0 2px 8px rgba(212,175,85,0.4)) contrast(108%) brightness(105%)',
+                }}
               />
             </Link>
             <p className="text-xs text-white/80 leading-relaxed">

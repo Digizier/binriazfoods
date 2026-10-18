@@ -1,33 +1,41 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCart } from '../lib/cart-context';
 import { supabase } from '../lib/supabase';
-import { Category } from '../lib/types';
+import { Category, Product } from '../lib/types';
 import {
   Search,
   ShoppingBag,
   Heart,
   Menu,
   X,
-  Phone,
   MessageCircle,
   ChevronDown,
   Sparkles,
-  ShieldAlert,
+  Loader2,
+  ArrowRight,
 } from 'lucide-react';
 
 export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
-  const { cartCount, toggleCart, wishlist } = useCart();
+  const { cartCount, toggleCart, wishlist, openWishlist } = useCart();
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+
+  // Real-time search state
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+
+  const desktopSearchRef = useRef<HTMLDivElement>(null);
+  const mobileSearchRef = useRef<HTMLDivElement>(null);
 
   // If on admin routes, do NOT show the storefront header!
   if (pathname.startsWith('/admin')) {
@@ -53,12 +61,69 @@ export default function Header() {
     fetchCategories();
   }, []);
 
-  const handleSearch = (e: React.FormEvent) => {
+  // Real-time debounced product search
+  useEffect(() => {
+    const q = searchQuery.trim();
+    if (!q) {
+      setSearchResults([]);
+      setShowSearchDropdown(false);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const { data } = await supabase
+          .from('products')
+          .select('id, name, slug, price, compare_price, cover_image, is_active, rating, weight_options')
+          .eq('is_active', true)
+          .ilike('name', `%${q}%`)
+          .limit(6);
+
+        if (data) {
+          setSearchResults(data as Product[]);
+          setShowSearchDropdown(true);
+        }
+      } catch (err) {
+        console.warn('Real-time search error:', err);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Click outside to close search dropdown
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      const target = e.target as Node;
+      if (
+        desktopSearchRef.current &&
+        !desktopSearchRef.current.contains(target) &&
+        mobileSearchRef.current &&
+        !mobileSearchRef.current.contains(target)
+      ) {
+        setShowSearchDropdown(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
+      setShowSearchDropdown(false);
       router.push(`/shop?q=${encodeURIComponent(searchQuery.trim())}`);
       setIsMobileMenuOpen(false);
     }
+  };
+
+  const handleSelectProduct = (slug: string) => {
+    setShowSearchDropdown(false);
+    setSearchQuery('');
+    router.push(`/product/${slug}`);
   };
 
   return (
@@ -97,48 +162,130 @@ export default function Header() {
 
       {/* 2. Main Branding & Search Row */}
       <div className="max-w-7xl mx-auto px-4 py-3 sm:py-4">
-        <div className="flex items-center justify-between gap-4">
-          {/* Mobile Menu Toggle */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-2 text-[#0B3826] hover:bg-gray-100 rounded-xl"
-            aria-label="Toggle navigation menu"
-          >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-
-          {/* Official Transparent Logo */}
-          <Link href="/" className="flex items-center space-x-3 shrink-0">
-            <img
-              src="/logo.png"
-              alt="Bin Riaz Foods Logo"
-              className="h-12 sm:h-16 w-auto object-contain"
-              style={{ maxHeight: '56px', width: 'auto' }}
-            />
-          </Link>
-
-          {/* Search Bar (Desktop) */}
-          <form
-            onSubmit={handleSearch}
-            className="hidden md:flex flex-1 max-w-xl mx-4 relative"
-          >
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search for pure spices, dry fruits, dates, honey, desi ghee..."
-              className="w-full bg-[#FAF6EC] border border-[#E5E1D6] rounded-full py-2.5 pl-5 pr-12 text-sm text-gray-800 placeholder-gray-500 focus:outline-hidden focus:border-[#D4AF55] focus:bg-white transition-all shadow-inner"
-            />
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
+          {/* Mobile Menu Toggle (Left on Mobile) */}
+          <div className="lg:hidden flex items-center">
             <button
-              type="submit"
-              className="absolute right-1.5 top-1.5 bottom-1.5 px-4 bg-[#0B3826] hover:bg-[#18583A] text-white rounded-full flex items-center justify-center transition-colors shadow-xs cursor-pointer"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 text-[#0B3826] hover:bg-[#FAF6EC] rounded-xl transition-colors cursor-pointer"
+              aria-label="Toggle navigation menu"
             >
-              <Search className="w-4 h-4" />
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
-          </form>
+          </div>
+
+          {/* Official Transparent Logo (Centered on Mobile, Left on Desktop, Enhanced Visibility) */}
+          <div className="flex-1 lg:flex-initial flex justify-center lg:justify-start">
+            <Link href="/" className="flex items-center space-x-3 shrink-0 py-1">
+              <img
+                src="/logo.png"
+                alt="Bin Riaz Foods Logo"
+                className="h-14 sm:h-16 w-auto object-contain transition-all duration-300 hover:scale-105"
+                style={{
+                  maxHeight: '62px',
+                  width: 'auto',
+                  filter: 'drop-shadow(0 2px 8px rgba(212,175,85,0.4)) contrast(108%) brightness(105%)',
+                }}
+              />
+            </Link>
+          </div>
+
+          {/* Search Bar with Instant Real-Time Dropdown (Desktop) */}
+          <div ref={desktopSearchRef} className="hidden md:flex flex-1 max-w-xl mx-4 relative">
+            <form onSubmit={handleSearchSubmit} className="w-full relative">
+              <input
+                type="text"
+                value={searchQuery}
+                onFocus={() => {
+                  if (searchQuery.trim().length > 0) setShowSearchDropdown(true);
+                }}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search pure spices, dry fruits, dates, honey, desi ghee..."
+                className="w-full bg-[#FAF6EC] border border-[#E5E1D6] rounded-full py-2.5 pl-5 pr-12 text-sm text-gray-800 placeholder-gray-500 focus:outline-hidden focus:border-[#D4AF55] focus:bg-white transition-all shadow-inner"
+              />
+              <button
+                type="submit"
+                className="absolute right-1.5 top-1.5 bottom-1.5 px-4 bg-[#0B3826] hover:bg-[#18583A] text-white rounded-full flex items-center justify-center transition-colors shadow-xs cursor-pointer"
+              >
+                {isSearching ? (
+                  <Loader2 className="w-4 h-4 animate-spin text-[#D4AF55]" />
+                ) : (
+                  <Search className="w-4 h-4" />
+                )}
+              </button>
+            </form>
+
+            {/* Desktop Real-Time Search Results Dropdown */}
+            {showSearchDropdown && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-[#E5E1D6] overflow-hidden z-50 animate-fadeIn">
+                <div className="p-3 bg-[#FAF6EC] border-b border-[#E5E1D6] flex items-center justify-between text-xs font-bold text-[#0B3826]">
+                  <span>Matching Products ({searchResults.length})</span>
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery('')}
+                      className="text-gray-400 hover:text-red-500 text-[11px] cursor-pointer"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+
+                <div className="max-h-80 overflow-y-auto divide-y divide-[#E5E1D6]/50">
+                  {searchResults.length === 0 ? (
+                    <div className="p-6 text-center text-xs text-gray-500">
+                      No products found for &ldquo;{searchQuery}&rdquo;.
+                      <div className="mt-2 text-[11px] text-[#0B3826] font-semibold">
+                        Try searching: Garam Masala, Badam, Ajwa, Sidr Honey
+                      </div>
+                    </div>
+                  ) : (
+                    searchResults.map((prod) => (
+                      <div
+                        key={prod.id}
+                        onClick={() => handleSelectProduct(prod.slug)}
+                        className="p-3 flex items-center gap-3 hover:bg-[#FAF6EC] transition-colors cursor-pointer group"
+                      >
+                        <img
+                          src={prod.cover_image || '/hero-banner.png'}
+                          alt={prod.name}
+                          className="w-12 h-12 rounded-xl object-cover bg-white border border-[#E5E1D6] group-hover:scale-105 transition-transform"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-xs font-bold text-[#0B3826] group-hover:text-[#D4AF55] truncate transition-colors">
+                            {prod.name}
+                          </h4>
+                          <span className="text-[10px] text-gray-400">
+                            {prod.weight_options && prod.weight_options.join(' • ')}
+                          </span>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-xs font-black text-[#0B3826]">
+                            Rs. {Number(prod.price).toLocaleString()}
+                          </div>
+                          <span className="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded-full">
+                            In Stock
+                          </span>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                {searchResults.length > 0 && (
+                  <button
+                    onClick={handleSearchSubmit}
+                    className="w-full p-2.5 bg-[#0B3826] hover:bg-[#18583A] text-white text-xs font-bold flex items-center justify-center space-x-1 transition-colors cursor-pointer"
+                  >
+                    <span>View all results for &ldquo;{searchQuery}&rdquo;</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
 
           {/* Right Action Icons */}
-          <div className="flex items-center space-x-3 sm:space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
             {/* WhatsApp Contact Direct */}
             <a
               href="https://wa.me/923456001913?text=Salam%20Bin%20Riaz%20Foods"
@@ -150,19 +297,19 @@ export default function Header() {
               <span>WhatsApp</span>
             </a>
 
-            {/* Wishlist Icon */}
-            <Link
-              href="/shop"
-              className="relative p-2 text-gray-700 hover:text-[#0B3826] transition-colors"
+            {/* Saved Wishlist Icon Button */}
+            <button
+              onClick={openWishlist}
+              className="relative p-2 text-gray-700 hover:text-red-500 transition-colors cursor-pointer"
               title="Saved items"
             >
-              <Heart className="w-5 h-5 sm:w-6 sm:h-6" />
+              <Heart className={`w-5 h-5 sm:w-6 sm:h-6 ${wishlist.length > 0 ? 'text-red-500 fill-red-500' : ''}`} />
               {wishlist.length > 0 && (
-                <span className="absolute top-1 right-1 bg-[#D4AF55] text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center">
+                <span className="absolute top-1 right-1 bg-red-500 text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
                   {wishlist.length}
                 </span>
               )}
-            </Link>
+            </button>
 
             {/* Cart Button with Count Badge */}
             <button
@@ -179,22 +326,88 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Search Input */}
-        <form onSubmit={handleSearch} className="mt-3 md:hidden relative">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search spices, dry fruits, honey..."
-            className="w-full bg-[#FAF6EC] border border-[#E5E1D6] rounded-full py-2 pl-4 pr-10 text-xs text-gray-800 placeholder-gray-500 focus:outline-hidden focus:border-[#D4AF55]"
-          />
-          <button
-            type="submit"
-            className="absolute right-1 top-1 bottom-1 px-3 bg-[#0B3826] text-white rounded-full flex items-center justify-center"
-          >
-            <Search className="w-3.5 h-3.5" />
-          </button>
-        </form>
+        {/* Mobile Real-Time Search Bar */}
+        <div ref={mobileSearchRef} className="mt-3 md:hidden relative">
+          <form onSubmit={handleSearchSubmit} className="relative">
+            <input
+              type="text"
+              value={searchQuery}
+              onFocus={() => {
+                if (searchQuery.trim().length > 0) setShowSearchDropdown(true);
+              }}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search spices, dry fruits, honey, dates..."
+              className="w-full bg-[#FAF6EC] border border-[#E5E1D6] rounded-full py-2.5 pl-4 pr-10 text-xs text-gray-800 placeholder-gray-500 focus:outline-hidden focus:border-[#D4AF55] focus:bg-white"
+            />
+            <button
+              type="submit"
+              className="absolute right-1 top-1 bottom-1 px-3 bg-[#0B3826] text-white rounded-full flex items-center justify-center"
+            >
+              {isSearching ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-[#D4AF55]" />
+              ) : (
+                <Search className="w-3.5 h-3.5" />
+              )}
+            </button>
+          </form>
+
+          {/* Mobile Real-Time Search Results Dropdown */}
+          {showSearchDropdown && (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-[#E5E1D6] overflow-hidden z-50 animate-fadeIn">
+              <div className="p-2.5 bg-[#FAF6EC] border-b border-[#E5E1D6] flex items-center justify-between text-[11px] font-bold text-[#0B3826]">
+                <span>Matching Products ({searchResults.length})</span>
+                <button
+                  onClick={() => setShowSearchDropdown(false)}
+                  className="text-gray-400 hover:text-red-500 text-[10px]"
+                >
+                  Close
+                </button>
+              </div>
+
+              <div className="max-h-64 overflow-y-auto divide-y divide-[#E5E1D6]/50">
+                {searchResults.length === 0 ? (
+                  <div className="p-4 text-center text-xs text-gray-500">
+                    No products found for &ldquo;{searchQuery}&rdquo;.
+                  </div>
+                ) : (
+                  searchResults.map((prod) => (
+                    <div
+                      key={prod.id}
+                      onClick={() => handleSelectProduct(prod.slug)}
+                      className="p-2.5 flex items-center gap-2.5 hover:bg-[#FAF6EC] transition-colors cursor-pointer"
+                    >
+                      <img
+                        src={prod.cover_image || '/hero-banner.png'}
+                        alt={prod.name}
+                        className="w-10 h-10 rounded-lg object-cover bg-white border border-[#E5E1D6]"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-xs font-bold text-[#0B3826] truncate">
+                          {prod.name}
+                        </h4>
+                        <div className="text-[11px] font-black text-[#0B3826]">
+                          Rs. {Number(prod.price).toLocaleString()}
+                        </div>
+                      </div>
+                      <span className="text-[9px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded-full">
+                        In Stock
+                      </span>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {searchResults.length > 0 && (
+                <button
+                  onClick={handleSearchSubmit}
+                  className="w-full p-2 bg-[#0B3826] text-white text-[11px] font-bold flex items-center justify-center space-x-1"
+                >
+                  <span>View all results &rarr;</span>
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* 3. Bottom Desktop Category Navigation Bar */}
@@ -291,7 +504,16 @@ export default function Header() {
         <div className="lg:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex">
           <div className="w-4/5 max-w-sm bg-white h-full flex flex-col p-5 shadow-2xl">
             <div className="flex items-center justify-between pb-4 border-b border-[#E5E1D6]">
-              <img src="/logo.png" alt="Logo" className="h-10 w-auto" />
+              <img
+                src="/logo.png"
+                alt="Logo"
+                className="h-12 w-auto"
+                style={{
+                  maxHeight: '48px',
+                  width: 'auto',
+                  filter: 'drop-shadow(0 2px 6px rgba(212,175,85,0.4)) contrast(108%) brightness(105%)',
+                }}
+              />
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="p-1 rounded-full text-gray-400 hover:text-gray-700"
@@ -300,77 +522,84 @@ export default function Header() {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto py-4 space-y-3 text-sm font-bold text-[#0B3826]">
+            <nav className="flex-1 overflow-y-auto py-4 space-y-2">
               <Link
                 href="/"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block py-2 border-b border-gray-100"
+                className="block px-3 py-2 text-sm font-bold text-[#0B3826] hover:bg-[#FAF6EC] rounded-xl"
               >
                 Home
               </Link>
               <Link
                 href="/shop"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block py-2 border-b border-gray-100"
+                className="block px-3 py-2 text-sm font-bold text-[#0B3826] hover:bg-[#FAF6EC] rounded-xl"
               >
                 Shop All Products
               </Link>
               <Link
                 href="/shop?category=gift-hampers"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block py-2 border-b border-gray-100 text-[#D4AF55]"
+                className="block px-3 py-2 text-sm font-bold text-[#0B3826] hover:bg-[#FAF6EC] rounded-xl"
               >
                 Luxury Gift Hampers
               </Link>
               <Link
                 href="/shop?category=combo-packs"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block py-2 border-b border-gray-100 text-red-600"
+                className="block px-3 py-2 text-sm font-bold text-red-700 hover:bg-red-50 rounded-xl"
               >
                 Special Offers & Combos
               </Link>
+              <Link
+                href="/about"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-3 py-2 text-sm font-bold text-[#0B3826] hover:bg-[#FAF6EC] rounded-xl"
+              >
+                About Us
+              </Link>
+              <Link
+                href="/contact"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-3 py-2 text-sm font-bold text-[#0B3826] hover:bg-[#FAF6EC] rounded-xl"
+              >
+                Contact
+              </Link>
+              <Link
+                href="/track-order"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-3 py-2 text-sm font-bold text-[#0B3826] hover:bg-[#FAF6EC] rounded-xl"
+              >
+                Track Order
+              </Link>
 
-              <div className="pt-2">
-                <span className="text-[11px] uppercase tracking-wider text-gray-400 font-bold block mb-2">
-                  All Categories
-                </span>
-                <div className="space-y-1 pl-2 font-medium text-xs text-gray-700">
-                  {categories.map((cat) => (
-                    <Link
-                      key={cat.id}
-                      href={`/shop?category=${cat.slug}`}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="block py-1.5 hover:text-[#0B3826]"
-                    >
-                      {cat.name}
-                    </Link>
-                  ))}
-                </div>
+              <div className="pt-4 border-t border-[#E5E1D6]">
+                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 px-3">
+                  Top Categories
+                </h4>
+                {categories.map((cat) => (
+                  <Link
+                    key={cat.id}
+                    href={`/shop?category=${cat.slug}`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block px-3 py-2 text-xs font-semibold text-gray-700 hover:text-[#0B3826]"
+                  >
+                    {cat.name}
+                  </Link>
+                ))}
               </div>
+            </nav>
 
-              <div className="pt-4 border-t border-gray-200">
-                <Link
-                  href="/about"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block py-2 text-xs font-semibold text-gray-600"
-                >
-                  About Bin Riaz Foods
-                </Link>
-                <Link
-                  href="/contact"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block py-2 text-xs font-semibold text-gray-600"
-                >
-                  Contact Helpline & Location
-                </Link>
-              </div>
-            </div>
-
-            {/* Mobile Drawer Bottom Info */}
-            <div className="pt-4 border-t border-[#E5E1D6] text-xs text-gray-500">
-              <p className="font-semibold text-[#0B3826]">Customer Helpline:</p>
-              <p>0345 6001913 | 0321 6001913</p>
-              <p className="text-[10px] mt-1 text-gray-400">Sargodha, Punjab, Pakistan</p>
+            <div className="pt-4 border-t border-[#E5E1D6] space-y-2">
+              <a
+                href="https://wa.me/923456001913?text=Salam%20Bin%20Riaz%20Foods"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full py-2.5 bg-[#25D366] text-white rounded-xl text-xs font-bold flex items-center justify-center space-x-2 shadow-xs"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>WhatsApp Order Support</span>
+              </a>
             </div>
           </div>
         </div>

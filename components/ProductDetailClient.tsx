@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '../lib/supabase';
 import { Product } from '../lib/types';
 import { useCart } from '../lib/cart-context';
+import { calculatePriceForWeight } from '../lib/price-calculator';
 import {
   Star,
   ShoppingBag,
@@ -119,14 +120,40 @@ export default function ProductDetailClient({ slug }: ProductDetailClientProps) 
     ...(Array.isArray(product.gallery_images) ? product.gallery_images : []),
   ];
 
+  const defaultVariant =
+    product.weight_options && product.weight_options.length > 0
+      ? product.weight_options[0]
+      : 'Standard';
+
+  const currentPrice = calculatePriceForWeight(product.price, defaultVariant, selectedVariant);
+  const currentComparePrice = product.compare_price
+    ? calculatePriceForWeight(product.compare_price, defaultVariant, selectedVariant)
+    : null;
+
   const handleAddToCart = () => {
-    addToCart(product, selectedVariant, quantity);
+    addToCart(
+      {
+        ...product,
+        price: currentPrice,
+        compare_price: currentComparePrice,
+      },
+      selectedVariant,
+      quantity
+    );
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 1500);
   };
 
   const handleBuyNow = () => {
-    addToCart(product, selectedVariant, quantity);
+    addToCart(
+      {
+        ...product,
+        price: currentPrice,
+        compare_price: currentComparePrice,
+      },
+      selectedVariant,
+      quantity
+    );
     router.push('/checkout');
   };
 
@@ -250,12 +277,12 @@ export default function ProductDetailClient({ slug }: ProductDetailClientProps) 
 
           {/* Pricing */}
           <div className="p-4 bg-white rounded-2xl border border-[#E5E1D6] flex items-baseline space-x-3">
-            <span className="text-3xl font-black text-[#0B3826]">
-              Rs. {Number(product.price).toLocaleString()}
+            <span className="text-3xl font-black text-[#0B3826] transition-all">
+              Rs. {Number(currentPrice).toLocaleString()}
             </span>
-            {product.compare_price && product.compare_price > product.price && (
+            {currentComparePrice && currentComparePrice > currentPrice && (
               <span className="text-sm text-gray-400 line-through">
-                Rs. {Number(product.compare_price).toLocaleString()}
+                Rs. {Number(currentComparePrice).toLocaleString()}
               </span>
             )}
             <span className="text-xs font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-full border border-green-200">
