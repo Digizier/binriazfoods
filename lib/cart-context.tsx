@@ -6,7 +6,7 @@ import { supabase } from './supabase';
 
 interface CartContextType {
   cart: CartItem[];
-  addToCart: (product: Product, variant?: string, quantity?: number) => void;
+  addToCart: (product: Product, variant?: string, quantity?: number, openDrawer?: boolean) => void;
   updateQuantity: (productId: string, variant: string, newQuantity: number) => void;
   removeFromCart: (productId: string, variant: string) => void;
   clearCart: () => void;
@@ -75,7 +75,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [wishlist, isHydrated]);
 
-  const addToCart = (product: Product, variant?: string, quantity: number = 1) => {
+  const addToCart = (
+    product: Product,
+    variant?: string,
+    quantity: number = 1,
+    openDrawer: boolean = true
+  ) => {
     const selectedVariant = variant || (product.weight_options && product.weight_options[0]) || 'Standard';
 
     setCart((prevCart) => {
@@ -92,7 +97,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
     });
 
-    setIsCartOpen(true);
+    if (openDrawer) {
+      setIsCartOpen(true);
+    }
   };
 
   const updateQuantity = (productId: string, variant: string, newQuantity: number) => {

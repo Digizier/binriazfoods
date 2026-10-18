@@ -13,7 +13,7 @@ async function updateMedia() {
 
   try {
     await client.connect();
-    console.log('Connected to pooler for updating media...');
+    console.log('Connected to pooler for updating media with exact slugs...');
 
     // 1. Update Category Images
     const categoryImages = [
@@ -41,31 +41,31 @@ async function updateMedia() {
     }
     console.log('Updated category images.');
 
-    // 2. Update Product Images
-    const productImages = [
+    // 2. Update Product Images with EXACT database slugs
+    const exactProductImages = [
       { slug: 'red-chili-powder', img: '/products/red-chili-powder.jpg' },
       { slug: 'turmeric-powder', img: '/products/turmeric-powder.jpg' },
       { slug: 'special-garam-masala', img: '/products/special-garam-masala.jpg' },
-      { slug: 'california-almonds', img: '/products/california-almonds.jpg' },
-      { slug: 'royal-pistachios', img: '/products/royal-pistachios.jpg' },
-      { slug: 'ajwa-dates', img: '/products/ajwa-dates.jpg' },
-      { slug: 'sidr-honey', img: '/products/sidr-honey.jpg' },
-      { slug: 'desi-cow-ghee', img: '/products/desi-cow-ghee.jpg' },
-      { slug: 'mixed-dry-fruits', img: '/products/mixed-dry-fruits.jpg' },
-      { slug: 'family-combo-pack', img: '/products/family-combo-pack.jpg' },
-      { slug: 'ramadan-gift-box', img: '/products/ramadan-gift-box.jpg' },
-      { slug: 'eid-hamper', img: '/products/eid-hamper.jpg' },
-      { slug: 'mustard-oil', img: '/products/mustard-oil.jpg' },
+      { slug: 'premium-california-almonds', img: '/products/california-almonds.jpg' },
+      { slug: 'luxury-mixed-dry-fruits', img: '/products/mixed-dry-fruits.jpg' },
+      { slug: 'premium-ajwa-dates', img: '/products/ajwa-dates.jpg' },
+      { slug: 'pure-sidr-honey', img: '/products/sidr-honey.jpg' },
+      { slug: 'pure-cow-desi-ghee', img: '/products/desi-cow-ghee.jpg' },
+      { slug: 'super-kernel-basmati-rice', img: '/products/basmati-rice.jpg' },
+      { slug: 'imperial-green-tea', img: '/products/green-tea.jpg' },
+      { slug: 'traditional-mango-pickle', img: '/products/mustard-oil.jpg' },
+      { slug: 'royal-heritage-gift-hamper', img: '/products/ramadan-gift-box.jpg' },
+      { slug: 'healthy-family-pack', img: '/products/family-combo-pack.jpg' },
     ];
 
-    for (const prod of productImages) {
-      await client.query(`
+    for (const prod of exactProductImages) {
+      const res = await client.query(`
         UPDATE public.products
         SET cover_image = $1, gallery_images = $2::jsonb
         WHERE slug = $3;
       `, [prod.img, JSON.stringify([prod.img]), prod.slug]);
+      console.log(`Updated ${prod.slug} -> ${prod.img} (${res.rowCount} row affected)`);
     }
-    console.log('Updated product images.');
 
     // 3. Update Hero Banner
     await client.query(`
@@ -74,7 +74,7 @@ async function updateMedia() {
     `);
     console.log('Updated hero banner image.');
 
-    console.log('ALL MEDIA UPDATED SUCCESSFULLY IN DATABASE!');
+    console.log('ALL MEDIA SYNCHRONIZED PERFECTLY IN CLOUD DATABASE!');
   } catch (err) {
     console.error('Update error:', err);
   } finally {

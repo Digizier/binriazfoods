@@ -4,7 +4,6 @@ import { CartProvider } from '../lib/cart-context';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import CartDrawer from '../components/CartDrawer';
-import WishlistDrawer from '../components/WishlistDrawer';
 import MobileBottomNav from '../components/MobileBottomNav';
 import ScrollToTop from '../components/ScrollToTop';
 
@@ -55,7 +54,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased scroll-smooth" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/favicon.png" />
+        <link rel="icon" href="/favicon.png" type="image/png" />
+        <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/logo.png" />
       </head>
       <body className="min-h-full flex flex-col bg-[#FAF6EC] text-[#202820]" suppressHydrationWarning>
         <CartProvider>
@@ -63,7 +64,6 @@ export default function RootLayout({
           <Header />
           <main className="flex-1">{children}</main>
           <CartDrawer />
-          <WishlistDrawer />
           <MobileBottomNav />
           <Footer />
         </CartProvider>

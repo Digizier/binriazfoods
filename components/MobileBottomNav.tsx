@@ -62,12 +62,16 @@ export default function MobileBottomNav() {
           <span>Bag</span>
         </button>
 
-        {/* Saved Wishlist Drawer Trigger */}
-        <button
-          onClick={openWishlist}
-          className="flex flex-col items-center space-y-1 py-1 text-gray-500 hover:text-red-500 relative cursor-pointer"
+        {/* Saved Wishlist Link to Full Page */}
+        <Link
+          href="/wishlist"
+          className={`flex flex-col items-center space-y-1 py-1 transition-colors ${
+            pathname === '/wishlist'
+              ? 'text-[#0B3826] font-black'
+              : 'text-gray-500 hover:text-red-500'
+          }`}
         >
-          <div className="p-1 rounded-xl relative">
+          <div className={`p-1 rounded-xl relative ${pathname === '/wishlist' ? 'bg-red-50 text-red-500' : ''}`}>
             <Heart className={`w-5 h-5 ${wishlist.length > 0 ? 'text-red-500 fill-red-500' : ''}`} />
             {wishlist.length > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
@@ -76,7 +80,7 @@ export default function MobileBottomNav() {
             )}
           </div>
           <span>Saved</span>
-        </button>
+        </Link>
 
         {/* 1-Tap WhatsApp Support */}
         <a

@@ -92,7 +92,39 @@ export default function ProductCard({ product }: ProductCardProps) {
           <div className="absolute inset-0 shimmer-flash" />
         )}
         <img
-          src={product.cover_image || '/hero-banner.png'}
+          src={
+            product.cover_image && !product.cover_image.includes('hero-banner')
+              ? product.cover_image
+              : product.slug.includes('chili')
+              ? '/products/red-chili-powder.jpg'
+              : product.slug.includes('turmeric')
+              ? '/products/turmeric-powder.jpg'
+              : product.slug.includes('garam') || product.slug.includes('masala')
+              ? '/products/special-garam-masala.jpg'
+              : product.slug.includes('almond') || product.slug.includes('badam')
+              ? '/products/california-almonds.jpg'
+              : product.slug.includes('pista')
+              ? '/products/royal-pistachios.jpg'
+              : product.slug.includes('date') || product.slug.includes('ajwa')
+              ? '/products/ajwa-dates.jpg'
+              : product.slug.includes('honey') || product.slug.includes('shehad')
+              ? '/products/sidr-honey.jpg'
+              : product.slug.includes('ghee')
+              ? '/products/desi-cow-ghee.jpg'
+              : product.slug.includes('dal') || product.slug.includes('lentil')
+              ? '/products/masoor-dal.jpg'
+              : product.slug.includes('rice') || product.slug.includes('basmati')
+              ? '/products/basmati-rice.jpg'
+              : product.slug.includes('tea')
+              ? '/products/green-tea.jpg'
+              : product.slug.includes('pickle') || product.slug.includes('achar') || product.slug.includes('oil')
+              ? '/products/mustard-oil.jpg'
+              : product.slug.includes('hamper') || product.slug.includes('ramadan') || product.slug.includes('eid')
+              ? '/products/ramadan-gift-box.jpg'
+              : product.slug.includes('combo') || product.slug.includes('family')
+              ? '/products/family-combo-pack.jpg'
+              : '/products/red-chili-powder.jpg'
+          }
           alt={product.name}
           onLoad={() => setIsImgLoaded(true)}
           className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${

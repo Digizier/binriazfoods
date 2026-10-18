@@ -161,10 +161,10 @@ export default function Header() {
       </div>
 
       {/* 2. Main Branding & Search Row */}
-      <div className="max-w-7xl mx-auto px-4 py-3 sm:py-4">
+      <div className="max-w-7xl mx-auto px-4 py-3 sm:py-4 relative">
         <div className="flex items-center justify-between gap-2 sm:gap-4">
           {/* Mobile Menu Toggle (Left on Mobile) */}
-          <div className="lg:hidden flex items-center">
+          <div className="lg:hidden flex items-center z-10">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2 text-[#0B3826] hover:bg-[#FAF6EC] rounded-xl transition-colors cursor-pointer"
@@ -174,17 +174,33 @@ export default function Header() {
             </button>
           </div>
 
-          {/* Official Transparent Logo (Centered on Mobile, Left on Desktop, Enhanced Visibility) */}
-          <div className="flex-1 lg:flex-initial flex justify-center lg:justify-start">
+          {/* Official Transparent Logo (Desktop Left-Aligned) */}
+          <div className="hidden lg:flex items-center">
             <Link href="/" className="flex items-center space-x-3 shrink-0 py-1">
               <img
                 src="/logo.png"
                 alt="Bin Riaz Foods Logo"
-                className="h-14 sm:h-16 w-auto object-contain transition-all duration-300 hover:scale-105"
+                className="h-16 w-auto object-contain transition-all duration-300 hover:scale-105"
                 style={{
                   maxHeight: '62px',
                   width: 'auto',
                   filter: 'drop-shadow(0 2px 8px rgba(212,175,85,0.4)) contrast(108%) brightness(105%)',
+                }}
+              />
+            </Link>
+          </div>
+
+          {/* Mobile Logo: Absolute Perfect Center */}
+          <div className="lg:hidden absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 pointer-events-auto z-10">
+            <Link href="/" className="flex items-center justify-center py-1">
+              <img
+                src="/logo.png"
+                alt="Bin Riaz Foods Logo"
+                className="h-14 sm:h-16 w-auto object-contain transition-all"
+                style={{
+                  maxHeight: '58px',
+                  width: 'auto',
+                  filter: 'drop-shadow(0 2px 8px rgba(212,175,85,0.45)) contrast(110%) brightness(106%)',
                 }}
               />
             </Link>
@@ -297,11 +313,11 @@ export default function Header() {
               <span>WhatsApp</span>
             </a>
 
-            {/* Saved Wishlist Icon Button */}
-            <button
-              onClick={openWishlist}
+            {/* Saved Wishlist Link to Full Page */}
+            <Link
+              href="/wishlist"
               className="relative p-2 text-gray-700 hover:text-red-500 transition-colors cursor-pointer"
-              title="Saved items"
+              title="Saved wishlist items"
             >
               <Heart className={`w-5 h-5 sm:w-6 sm:h-6 ${wishlist.length > 0 ? 'text-red-500 fill-red-500' : ''}`} />
               {wishlist.length > 0 && (
@@ -309,7 +325,7 @@ export default function Header() {
                   {wishlist.length}
                 </span>
               )}
-            </button>
+            </Link>
 
             {/* Cart Button with Count Badge */}
             <button

@@ -2,10 +2,12 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useCart } from '../lib/cart-context';
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, Tag, CheckCircle2 } from 'lucide-react';
 
 export default function CartDrawer() {
+  const pathname = usePathname();
   const {
     cart,
     isCartOpen,
@@ -24,7 +26,7 @@ export default function CartDrawer() {
   const [couponMsg, setCouponMsg] = useState<{ text: string; isError: boolean } | null>(null);
   const [isApplying, setIsApplying] = useState(false);
 
-  if (!isCartOpen) return null;
+  if (!isCartOpen || pathname === '/checkout') return null;
 
   const freeShippingThreshold = 3000;
   const progressPercent = Math.min(100, Math.round((cartSubtotal / freeShippingThreshold) * 100));

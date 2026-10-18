@@ -25,7 +25,7 @@ interface ProductDetailClientProps {
 
 export default function ProductDetailClient({ slug }: ProductDetailClientProps) {
   const router = useRouter();
-  const { addToCart, toggleWishlist, wishlist } = useCart();
+  const { addToCart, closeCart, toggleWishlist, wishlist } = useCart();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -115,9 +115,44 @@ export default function ProductDetailClient({ slug }: ProductDetailClientProps) 
 
   const embedUrl = getYouTubeEmbedUrl(product.youtube_url);
 
+  const resolvedCoverImage =
+    product.cover_image && !product.cover_image.includes('hero-banner')
+      ? product.cover_image
+      : product.slug.includes('chili')
+      ? '/products/red-chili-powder.jpg'
+      : product.slug.includes('turmeric')
+      ? '/products/turmeric-powder.jpg'
+      : product.slug.includes('garam') || product.slug.includes('masala')
+      ? '/products/special-garam-masala.jpg'
+      : product.slug.includes('almond') || product.slug.includes('badam')
+      ? '/products/california-almonds.jpg'
+      : product.slug.includes('pista')
+      ? '/products/royal-pistachios.jpg'
+      : product.slug.includes('date') || product.slug.includes('ajwa')
+      ? '/products/ajwa-dates.jpg'
+      : product.slug.includes('honey') || product.slug.includes('shehad')
+      ? '/products/sidr-honey.jpg'
+      : product.slug.includes('ghee')
+      ? '/products/desi-cow-ghee.jpg'
+      : product.slug.includes('dal') || product.slug.includes('lentil')
+      ? '/products/masoor-dal.jpg'
+      : product.slug.includes('rice') || product.slug.includes('basmati')
+      ? '/products/basmati-rice.jpg'
+      : product.slug.includes('tea')
+      ? '/products/green-tea.jpg'
+      : product.slug.includes('pickle') || product.slug.includes('achar') || product.slug.includes('oil')
+      ? '/products/mustard-oil.jpg'
+      : product.slug.includes('hamper') || product.slug.includes('ramadan') || product.slug.includes('eid')
+      ? '/products/ramadan-gift-box.jpg'
+      : product.slug.includes('combo') || product.slug.includes('family')
+      ? '/products/family-combo-pack.jpg'
+      : '/products/red-chili-powder.jpg';
+
   const allImages = [
-    product.cover_image || '/hero-banner.png',
-    ...(Array.isArray(product.gallery_images) ? product.gallery_images : []),
+    resolvedCoverImage,
+    ...(Array.isArray(product.gallery_images) && product.gallery_images.length > 0 && !product.gallery_images[0].includes('hero-banner')
+      ? product.gallery_images
+      : []),
   ];
 
   const defaultVariant =
@@ -152,8 +187,10 @@ export default function ProductDetailClient({ slug }: ProductDetailClientProps) 
         compare_price: currentComparePrice,
       },
       selectedVariant,
-      quantity
+      quantity,
+      false
     );
+    closeCart();
     router.push('/checkout');
   };
 
