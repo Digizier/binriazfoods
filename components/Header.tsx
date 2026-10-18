@@ -127,7 +127,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-[#E5E1D6] shadow-xs">
+    <header className="sticky top-0 z-40 bg-[#F5EFE0] border-b border-[#DCD3C1] shadow-xs">
       {/* 1. Top Announcement Bar */}
       <div className="bg-[#0B3826] text-white py-1.5 px-4 text-xs">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center text-[11px] sm:text-xs">
@@ -161,13 +161,13 @@ export default function Header() {
       </div>
 
       {/* 2. Main Branding & Search Row */}
-      <div className="max-w-7xl mx-auto px-4 py-3 sm:py-4 relative">
-        <div className="flex items-center justify-between gap-2 sm:gap-4">
+      <div className="max-w-7xl mx-auto px-4 py-2 sm:py-3 relative">
+        <div className="relative flex items-center justify-between gap-2 sm:gap-4 h-13 sm:h-16">
           {/* Mobile Menu Toggle (Left on Mobile) */}
           <div className="lg:hidden flex items-center z-10">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 text-[#0B3826] hover:bg-[#FAF6EC] rounded-xl transition-colors cursor-pointer"
+              className="p-1.5 text-[#0B3826] hover:bg-[#EAE3D2] rounded-xl transition-colors cursor-pointer"
               aria-label="Toggle navigation menu"
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -190,15 +190,15 @@ export default function Header() {
             </Link>
           </div>
 
-          {/* Mobile Logo: Absolute Perfect Center */}
-          <div className="lg:hidden absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 pointer-events-auto z-10">
-            <Link href="/" className="flex items-center justify-center py-1">
+          {/* Mobile Logo: Contained strictly inside the top row (centered vertically & horizontally, completely above search bar) */}
+          <div className="lg:hidden absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 pointer-events-auto z-10 flex items-center justify-center">
+            <Link href="/" className="flex items-center justify-center">
               <img
                 src="/logo.png"
                 alt="Bin Riaz Foods Logo"
-                className="h-14 sm:h-16 w-auto object-contain transition-all"
+                className="h-12 w-auto object-contain transition-all"
                 style={{
-                  maxHeight: '58px',
+                  maxHeight: '48px',
                   width: 'auto',
                   filter: 'drop-shadow(0 2px 8px rgba(212,175,85,0.45)) contrast(110%) brightness(106%)',
                 }}
@@ -217,7 +217,7 @@ export default function Header() {
                 }}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search pure spices, dry fruits, dates, honey, desi ghee..."
-                className="w-full bg-[#FAF6EC] border border-[#E5E1D6] rounded-full py-2.5 pl-5 pr-12 text-sm text-gray-800 placeholder-gray-500 focus:outline-hidden focus:border-[#D4AF55] focus:bg-white transition-all shadow-inner"
+                className="w-full bg-white border border-[#D6CDBC] rounded-full py-2.5 pl-5 pr-12 text-sm text-gray-800 placeholder-gray-500 focus:outline-hidden focus:border-[#D4AF55] transition-all shadow-inner"
               />
               <button
                 type="submit"
@@ -307,7 +307,7 @@ export default function Header() {
               href="https://wa.me/923456001913?text=Salam%20Bin%20Riaz%20Foods"
               target="_blank"
               rel="noreferrer"
-              className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 bg-[#FAF6EC] hover:bg-[#eae3d5] text-[#0B3826] rounded-full text-xs font-semibold border border-[#E5E1D6] transition-colors"
+              className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 bg-white hover:bg-[#FAF6EC] text-[#0B3826] rounded-full text-xs font-semibold border border-[#D6CDBC] transition-colors shadow-2xs"
             >
               <MessageCircle className="w-4 h-4 text-[#25D366]" />
               <span>WhatsApp</span>
@@ -342,8 +342,8 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Real-Time Search Bar */}
-        <div ref={mobileSearchRef} className="mt-3 md:hidden relative">
+        {/* Mobile Real-Time Search Bar cleanly separated below */}
+        <div ref={mobileSearchRef} className="mt-2.5 md:hidden relative pb-1">
           <form onSubmit={handleSearchSubmit} className="relative">
             <input
               type="text"
@@ -353,7 +353,7 @@ export default function Header() {
               }}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search spices, dry fruits, honey, dates..."
-              className="w-full bg-[#FAF6EC] border border-[#E5E1D6] rounded-full py-2.5 pl-4 pr-10 text-xs text-gray-800 placeholder-gray-500 focus:outline-hidden focus:border-[#D4AF55] focus:bg-white"
+              className="w-full bg-white border border-[#D6CDBC] rounded-full py-2.5 pl-4 pr-10 text-xs text-gray-800 placeholder-gray-500 focus:outline-hidden focus:border-[#D4AF55] shadow-xs"
             />
             <button
               type="submit"
@@ -427,7 +427,7 @@ export default function Header() {
       </div>
 
       {/* 3. Bottom Desktop Category Navigation Bar */}
-      <nav className="hidden lg:block bg-[#FAF6EC] border-t border-[#E5E1D6]">
+      <nav className="hidden lg:block bg-[#ECE4D2] border-t border-[#DCD3C1]">
         <div className="max-w-7xl mx-auto px-4 flex items-center space-x-6 text-xs font-bold text-[#0B3826] py-2.5">
           <Link
             href="/"

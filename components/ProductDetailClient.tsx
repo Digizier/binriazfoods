@@ -17,6 +17,7 @@ import {
   ArrowRight,
   PackageCheck,
   Play,
+  MessageCircle,
 } from 'lucide-react';
 
 interface ProductDetailClientProps {
@@ -192,6 +193,14 @@ export default function ProductDetailClient({ slug }: ProductDetailClientProps) 
     );
     closeCart();
     router.push('/checkout');
+  };
+
+  const getWhatsAppOrderUrl = () => {
+    if (!product) return 'https://wa.me/923456001913';
+    const totalPrice = Number(currentPrice) * quantity;
+    const url = typeof window !== 'undefined' ? window.location.href : `https://binriazfoods.com/product/${product.slug}`;
+    const message = `Salam Bin Riaz Foods! I want to order this product:\n\n*Product:* ${product.name}\n*Package Size:* ${selectedVariant}\n*Quantity:* ${quantity}\n*Total Price:* Rs. ${totalPrice.toLocaleString()}\n*Link:* ${url}\n\nPlease confirm my order and share delivery details.`;
+    return `https://wa.me/923456001913?text=${encodeURIComponent(message)}`;
   };
 
   return (
@@ -408,6 +417,17 @@ export default function ProductDetailClient({ slug }: ProductDetailClientProps) 
               <span>Buy Now — Instant Checkout</span>
               <ArrowRight className="w-4 h-4" />
             </button>
+
+            {/* Direct WhatsApp Order Button */}
+            <a
+              href={getWhatsAppOrderUrl()}
+              target="_blank"
+              rel="noreferrer"
+              className="w-full py-3.5 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold rounded-xl text-sm shadow-md transition-all flex items-center justify-center space-x-2 cursor-pointer"
+            >
+              <MessageCircle className="w-5 h-5 fill-white text-white" />
+              <span>Order on WhatsApp (Fast Confirmation)</span>
+            </a>
           </div>
 
           {/* Food Safety & Packaging Details */}

@@ -104,9 +104,9 @@ export default function WishlistPage() {
 
       {/* Loading Shimmer */}
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-72 bg-white rounded-2xl shimmer-flash" />
+            <div key={i} className="h-64 sm:h-72 bg-white rounded-2xl shimmer-flash" />
           ))}
         </div>
       ) : products.length === 0 ? (
@@ -132,29 +132,29 @@ export default function WishlistPage() {
           </div>
         </div>
       ) : (
-        /* Products Grid */
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        /* Products Grid (2 columns on mobile, matching homepage bestseller cards) */
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
           {products.map((product) => {
             const isAdded = addedIds.includes(product.id);
             return (
               <div
                 key={product.id}
-                className="group bg-white rounded-2xl p-4 border border-[#E5E1D6] hover:border-[#D4AF55] hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+                className="group bg-white rounded-2xl p-2.5 sm:p-4 border border-[#E5E1D6] hover:border-[#D4AF55] hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
               >
                 <div className="relative">
                   {/* Remove Button */}
                   <button
                     onClick={() => toggleWishlist(product.id)}
-                    className="absolute top-2 right-2 z-10 p-2 bg-white/90 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-full shadow-xs transition-colors cursor-pointer"
+                    className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-10 p-1.5 sm:p-2 bg-white/90 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-full shadow-xs transition-colors cursor-pointer"
                     title="Remove from saved"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </button>
 
                   {/* Image */}
                   <Link
                     href={`/product/${product.slug}`}
-                    className="block relative aspect-square w-full rounded-xl overflow-hidden bg-[#FAF6EC] mb-3"
+                    className="block relative aspect-square w-full rounded-xl overflow-hidden bg-[#FAF6EC] mb-2 sm:mb-3"
                   >
                     <img
                       src={product.cover_image || '/hero-banner.png'}
@@ -164,30 +164,30 @@ export default function WishlistPage() {
                   </Link>
                 </div>
 
-                <div className="space-y-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#D4AF55]">
+                <div className="space-y-1.5 sm:space-y-2">
+                  <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[#D4AF55]">
                     {product.weight_options && product.weight_options[0]}
                   </span>
 
                   <Link href={`/product/${product.slug}`} className="block">
-                    <h3 className="font-bold text-[#0B3826] text-sm leading-snug line-clamp-2 hover:text-[#D4AF55] transition-colors">
+                    <h3 className="font-bold text-[#0B3826] text-xs sm:text-sm leading-tight sm:leading-snug line-clamp-2 min-h-[2rem] hover:text-[#D4AF55] transition-colors">
                       {product.name}
                     </h3>
                   </Link>
 
-                  <div className="flex items-center justify-between pt-2">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1.5 pt-1 sm:pt-2">
                     <div>
-                      <div className="text-base font-black text-[#0B3826]">
+                      <div className="text-xs sm:text-base font-black text-[#0B3826]">
                         Rs. {Number(product.price).toLocaleString()}
                       </div>
-                      <span className="text-[10px] font-semibold text-green-700">
+                      <span className="text-[9px] sm:text-[10px] font-semibold text-green-700">
                         In Stock
                       </span>
                     </div>
 
                     <button
                       onClick={() => handleAddSingle(product)}
-                      className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 shadow-sm cursor-pointer ${
+                      className={`w-full sm:w-auto px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-bold transition-all flex items-center justify-center space-x-1 sm:space-x-1.5 shadow-xs cursor-pointer ${
                         isAdded
                           ? 'bg-green-700 text-white'
                           : 'bg-[#0B3826] hover:bg-[#18583A] text-white hover:shadow-md'
