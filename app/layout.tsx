@@ -23,19 +23,25 @@ export const metadata: Metadata = {
     'Sargodha Food Brand',
   ],
   icons: {
-    icon: '/favicon.png',
+    icon: [
+      { url: '/favicon.png', type: 'image/png' },
+      { url: '/favicon.ico' },
+      { url: '/icon.png', type: 'image/png' },
+    ],
     shortcut: '/favicon.png',
-    apple: '/logo.png',
+    apple: [
+      { url: '/logo.png', sizes: '500x500', type: 'image/png' },
+    ],
   },
   openGraph: {
     title: 'BIN RIAZ FOODS | Pure Goodness, Every Home',
     description:
-      'Discover carefully selected food essentials, luxury dry fruits, pure spices, and thoughtful food gift hampers.',
+      'Discover carefully selected food essentials, luxury dry fruits, pure spices, authentic Ajwa dates, and thoughtful food gift hampers.',
     url: 'https://binriazfoods.com',
     siteName: 'BIN RIAZ FOODS',
     images: [
       {
-        url: '/logo.png',
+        url: 'https://binriazfoods.com/logo.png',
         width: 500,
         height: 500,
         alt: 'BIN RIAZ FOODS Official Logo',
@@ -43,6 +49,13 @@ export const metadata: Metadata = {
     ],
     locale: 'en_PK',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'BIN RIAZ FOODS | Pure Goodness, Every Home',
+    description:
+      'Discover carefully selected food essentials, luxury dry fruits, pure spices, authentic Ajwa dates, and thoughtful food gift hampers.',
+    images: ['https://binriazfoods.com/logo.png'],
   },
 };
 
@@ -57,6 +70,8 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="shortcut icon" href="/favicon.png" type="image/png" />
         <link rel="apple-touch-icon" href="/logo.png" />
+        <meta property="og:image" content="https://binriazfoods.com/logo.png" />
+        <meta name="twitter:image" content="https://binriazfoods.com/logo.png" />
       </head>
       <body className="min-h-full flex flex-col bg-[#FAF6EC] text-[#202820]" suppressHydrationWarning>
         <CartProvider>

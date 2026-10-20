@@ -61,11 +61,11 @@ export default function Footer() {
               <img
                 src="/logo.png"
                 alt="Bin Riaz Foods Logo"
-                className="h-16 w-auto object-contain"
+                className="h-20 w-auto object-contain transition-transform hover:scale-105"
                 style={{
-                  maxHeight: '64px',
+                  maxHeight: '80px',
                   width: 'auto',
-                  filter: 'drop-shadow(0 2px 8px rgba(212,175,85,0.4)) contrast(108%) brightness(105%)',
+                  filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.4)) drop-shadow(0 0 10px rgba(212,175,85,0.3))',
                 }}
               />
             </Link>

@@ -373,7 +373,10 @@ export default function HomePage() {
               <img
                 src="/logo.png"
                 alt="Bin Riaz Foods Seal"
-                className="max-h-56 w-auto object-contain"
+                className="max-h-56 sm:max-h-64 w-auto object-contain transition-transform duration-500 hover:scale-105"
+                style={{
+                  filter: 'drop-shadow(0 10px 25px rgba(212,175,85,0.3)) drop-shadow(0 4px 10px rgba(0,0,0,0.15))',
+                }}
               />
             </div>
             <div className="lg:col-span-7 space-y-4">

@@ -127,9 +127,9 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-[#F5EFE0] border-b border-[#DCD3C1] shadow-xs">
+    <header className="sticky top-0 z-40 bg-[#0E3D2B] border-b border-[#1A573D] shadow-md">
       {/* 1. Top Announcement Bar */}
-      <div className="bg-[#0B3826] text-white py-1.5 px-4 text-xs">
+      <div className="bg-[#072418] text-white py-1.5 px-4 text-xs border-b border-white/5">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center text-[11px] sm:text-xs">
           <div className="flex items-center space-x-2">
             <span className="inline-block w-2 h-2 rounded-full bg-[#D4AF55] animate-ping" />
@@ -162,12 +162,12 @@ export default function Header() {
 
       {/* 2. Main Branding & Search Row */}
       <div className="max-w-7xl mx-auto px-4 py-2 sm:py-3 relative">
-        <div className="relative flex items-center justify-between gap-2 sm:gap-4 h-13 sm:h-16">
+        <div className="relative flex items-center justify-between gap-2 sm:gap-4 h-14 sm:h-20">
           {/* Mobile Menu Toggle (Left on Mobile) */}
           <div className="lg:hidden flex items-center z-10">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-1.5 text-[#0B3826] hover:bg-[#EAE3D2] rounded-xl transition-colors cursor-pointer"
+              className="p-1.5 text-[#FAF6EC] hover:bg-white/10 rounded-xl transition-colors cursor-pointer"
               aria-label="Toggle navigation menu"
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -180,11 +180,11 @@ export default function Header() {
               <img
                 src="/logo.png"
                 alt="Bin Riaz Foods Logo"
-                className="h-16 w-auto object-contain transition-all duration-300 hover:scale-105"
+                className="h-16 sm:h-20 w-auto object-contain transition-all duration-300 hover:scale-105"
                 style={{
-                  maxHeight: '62px',
+                  maxHeight: '74px',
                   width: 'auto',
-                  filter: 'drop-shadow(0 2px 8px rgba(212,175,85,0.4)) contrast(108%) brightness(105%)',
+                  filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.4)) drop-shadow(0 0 10px rgba(212,175,85,0.35))',
                 }}
               />
             </Link>
@@ -196,11 +196,11 @@ export default function Header() {
               <img
                 src="/logo.png"
                 alt="Bin Riaz Foods Logo"
-                className="h-12 w-auto object-contain transition-all"
+                className="h-13 sm:h-14 w-auto object-contain transition-all"
                 style={{
-                  maxHeight: '48px',
+                  maxHeight: '52px',
                   width: 'auto',
-                  filter: 'drop-shadow(0 2px 8px rgba(212,175,85,0.45)) contrast(110%) brightness(106%)',
+                  filter: 'drop-shadow(0 3px 10px rgba(0,0,0,0.5)) drop-shadow(0 0 8px rgba(212,175,85,0.4))',
                 }}
               />
             </Link>
@@ -217,16 +217,16 @@ export default function Header() {
                 }}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search pure spices, dry fruits, dates, honey, desi ghee..."
-                className="w-full bg-white border border-[#D6CDBC] rounded-full py-2.5 pl-5 pr-12 text-sm text-gray-800 placeholder-gray-500 focus:outline-hidden focus:border-[#D4AF55] transition-all shadow-inner"
+                className="w-full bg-white/95 text-gray-900 placeholder-gray-500 rounded-full py-2.5 pl-5 pr-12 text-sm border border-[#D4AF55]/40 focus:outline-hidden focus:border-[#D4AF55] focus:bg-white transition-all shadow-inner"
               />
               <button
                 type="submit"
-                className="absolute right-1.5 top-1.5 bottom-1.5 px-4 bg-[#0B3826] hover:bg-[#18583A] text-white rounded-full flex items-center justify-center transition-colors shadow-xs cursor-pointer"
+                className="absolute right-1.5 top-1.5 bottom-1.5 px-4 bg-[#D4AF55] hover:bg-[#c29e46] text-[#06291B] rounded-full flex items-center justify-center transition-colors shadow-xs cursor-pointer font-bold"
               >
                 {isSearching ? (
-                  <Loader2 className="w-4 h-4 animate-spin text-[#D4AF55]" />
+                  <Loader2 className="w-4 h-4 animate-spin text-[#06291B]" />
                 ) : (
-                  <Search className="w-4 h-4" />
+                  <Search className="w-4 h-4 text-[#06291B]" />
                 )}
               </button>
             </form>
@@ -307,7 +307,7 @@ export default function Header() {
               href="https://wa.me/923456001913?text=Salam%20Bin%20Riaz%20Foods"
               target="_blank"
               rel="noreferrer"
-              className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 bg-white hover:bg-[#FAF6EC] text-[#0B3826] rounded-full text-xs font-semibold border border-[#D6CDBC] transition-colors shadow-2xs"
+              className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 text-[#FAF6EC] rounded-full text-xs font-semibold border border-[#D4AF55]/40 transition-colors shadow-2xs"
             >
               <MessageCircle className="w-4 h-4 text-[#25D366]" />
               <span>WhatsApp</span>
@@ -316,7 +316,7 @@ export default function Header() {
             {/* Saved Wishlist Link to Full Page */}
             <Link
               href="/wishlist"
-              className="relative p-2 text-gray-700 hover:text-red-500 transition-colors cursor-pointer"
+              className="relative p-2 text-[#FAF6EC] hover:text-red-400 transition-colors cursor-pointer"
               title="Saved wishlist items"
             >
               <Heart className={`w-5 h-5 sm:w-6 sm:h-6 ${wishlist.length > 0 ? 'text-red-500 fill-red-500' : ''}`} />
@@ -330,12 +330,12 @@ export default function Header() {
             {/* Cart Button with Count Badge */}
             <button
               onClick={toggleCart}
-              className="relative flex items-center space-x-2 bg-[#0B3826] hover:bg-[#18583A] text-white px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-full shadow-md transition-all cursor-pointer"
+              className="relative flex items-center space-x-2 bg-[#D4AF55] hover:bg-[#c29e46] text-[#06291B] px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-full shadow-md transition-all cursor-pointer font-bold"
               aria-label="View shopping bag"
             >
-              <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
+              <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-[#06291B]" />
               <span className="hidden sm:inline text-xs font-bold">Bag</span>
-              <span className="bg-[#D4AF55] text-[#0B3826] text-[10px] font-black px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
+              <span className="bg-[#0B3826] text-white text-[10px] font-black px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
                 {cartCount}
               </span>
             </button>
@@ -353,16 +353,16 @@ export default function Header() {
               }}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search spices, dry fruits, honey, dates..."
-              className="w-full bg-white border border-[#D6CDBC] rounded-full py-2.5 pl-4 pr-10 text-xs text-gray-800 placeholder-gray-500 focus:outline-hidden focus:border-[#D4AF55] shadow-xs"
+              className="w-full bg-white text-gray-900 placeholder-gray-500 border border-[#D4AF55]/40 rounded-full py-2.5 pl-4 pr-10 text-xs focus:outline-hidden focus:border-[#D4AF55] shadow-xs"
             />
             <button
               type="submit"
-              className="absolute right-1 top-1 bottom-1 px-3 bg-[#0B3826] text-white rounded-full flex items-center justify-center"
+              className="absolute right-1 top-1 bottom-1 px-3 bg-[#D4AF55] text-[#06291B] rounded-full flex items-center justify-center font-bold"
             >
               {isSearching ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin text-[#D4AF55]" />
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-[#06291B]" />
               ) : (
-                <Search className="w-3.5 h-3.5" />
+                <Search className="w-3.5 h-3.5 text-[#06291B]" />
               )}
             </button>
           </form>
@@ -427,8 +427,8 @@ export default function Header() {
       </div>
 
       {/* 3. Bottom Desktop Category Navigation Bar */}
-      <nav className="hidden lg:block bg-[#ECE4D2] border-t border-[#DCD3C1]">
-        <div className="max-w-7xl mx-auto px-4 flex items-center space-x-6 text-xs font-bold text-[#0B3826] py-2.5">
+      <nav className="hidden lg:block bg-[#092D20] border-t border-[#174F37]">
+        <div className="max-w-7xl mx-auto px-4 flex items-center space-x-6 text-xs font-bold text-white/90 py-2.5">
           <Link
             href="/"
             className={`hover:text-[#D4AF55] transition-colors py-1 ${
@@ -459,7 +459,7 @@ export default function Header() {
             </button>
 
             {isCategoryOpen && (
-              <div className="absolute top-full left-0 w-64 bg-white border border-[#E5E1D6] rounded-xl shadow-xl py-2 z-50 animate-fadeIn">
+              <div className="absolute top-full left-0 w-64 bg-white border border-[#E5E1D6] rounded-xl shadow-xl py-2 z-50 animate-fadeIn text-gray-800">
                 {categories.map((cat) => (
                   <Link
                     key={cat.id}
@@ -475,7 +475,7 @@ export default function Header() {
 
           <Link
             href="/shop?category=gift-hampers"
-            className="hover:text-[#D4AF55] transition-colors py-1 flex items-center space-x-1 text-[#0B3826]"
+            className="hover:text-[#D4AF55] transition-colors py-1 flex items-center space-x-1 text-white/90"
           >
             <Sparkles className="w-3 h-3 text-[#D4AF55]" />
             <span>Luxury Gift Hampers</span>
@@ -483,21 +483,21 @@ export default function Header() {
 
           <Link
             href="/shop?category=chocolates-confectionery"
-            className="hover:text-[#D4AF55] transition-colors py-1"
+            className="hover:text-[#D4AF55] transition-colors py-1 text-white/90"
           >
             Chocolates
           </Link>
 
           <Link
             href="/shop?category=combo-packs"
-            className="hover:text-[#D4AF55] transition-colors py-1 text-red-700"
+            className="hover:text-[#E8CB7A] transition-colors py-1 text-[#D4AF55] font-black"
           >
             Special Offers & Combos
           </Link>
 
           <Link
             href="/about"
-            className={`hover:text-[#D4AF55] transition-colors py-1 ${
+            className={`hover:text-[#D4AF55] transition-colors py-1 text-white/90 ${
               pathname === '/about' ? 'text-[#D4AF55] border-b-2 border-[#D4AF55]' : ''
             }`}
           >
@@ -506,7 +506,7 @@ export default function Header() {
 
           <Link
             href="/contact"
-            className={`hover:text-[#D4AF55] transition-colors py-1 ${
+            className={`hover:text-[#D4AF55] transition-colors py-1 text-white/90 ${
               pathname === '/contact' ? 'text-[#D4AF55] border-b-2 border-[#D4AF55]' : ''
             }`}
           >
@@ -520,19 +520,21 @@ export default function Header() {
         <div className="lg:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex">
           <div className="w-4/5 max-w-sm bg-white h-full flex flex-col p-5 shadow-2xl">
             <div className="flex items-center justify-between pb-4 border-b border-[#E5E1D6]">
-              <img
-                src="/logo.png"
-                alt="Logo"
-                className="h-12 w-auto"
-                style={{
-                  maxHeight: '48px',
-                  width: 'auto',
-                  filter: 'drop-shadow(0 2px 6px rgba(212,175,85,0.4)) contrast(108%) brightness(105%)',
-                }}
-              />
+              <div className="p-1.5 bg-[#0E3D2B] rounded-2xl shadow-sm flex items-center">
+                <img
+                  src="/logo.png"
+                  alt="Bin Riaz Foods Logo"
+                  className="h-12 w-auto object-contain"
+                  style={{
+                    maxHeight: '50px',
+                    width: 'auto',
+                    filter: 'drop-shadow(0 2px 8px rgba(212,175,85,0.4))',
+                  }}
+                />
+              </div>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="p-1 rounded-full text-gray-400 hover:text-gray-700"
+                className="p-1.5 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer"
               >
                 <X className="w-6 h-6" />
               </button>

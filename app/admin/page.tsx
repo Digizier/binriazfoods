@@ -357,13 +357,15 @@ export default function AdminDashboardPage() {
     return (
       <div className="min-h-screen bg-[#06291B] flex items-center justify-center p-4">
         <div className="bg-white rounded-3xl p-8 sm:p-10 max-w-md w-full shadow-2xl border border-[#D4AF55]/40 space-y-6">
-          <div className="text-center space-y-2">
-            <img
-              src="/logo.png"
-              alt="Bin Riaz Foods"
-              className="h-16 w-auto mx-auto object-contain"
-              style={{ maxHeight: '64px', width: 'auto' }}
-            />
+          <div className="text-center space-y-3">
+            <div className="w-24 h-24 mx-auto p-2 bg-[#06291B] rounded-3xl shadow-md flex items-center justify-center">
+              <img
+                src="/logo.png"
+                alt="Bin Riaz Foods"
+                className="h-20 w-auto object-contain"
+                style={{ maxHeight: '76px', width: 'auto' }}
+              />
+            </div>
             <h1 className="text-xl font-black text-[#0B3826]">
               Admin Control Portal
             </h1>
@@ -429,7 +431,12 @@ export default function AdminDashboardPage() {
         <div>
           {/* Logo & Portal Branding */}
           <div className="p-5 border-b border-white/10 flex items-center space-x-3">
-            <img src="/logo.png" alt="Logo" className="h-10 w-auto brightness-110" style={{ maxHeight: '40px', width: 'auto' }} />
+            <img
+              src="/logo.png"
+              alt="Logo"
+              className="h-12 w-auto object-contain shrink-0"
+              style={{ maxHeight: '48px', width: 'auto', filter: 'drop-shadow(0 2px 6px rgba(212,175,85,0.4))' }}
+            />
             <div>
               <h2 className="font-black text-sm text-[#D4AF55] leading-tight">BIN RIAZ FOODS</h2>
               <span className="text-[10px] text-white/60 uppercase tracking-widest font-bold">Admin Hub</span>
